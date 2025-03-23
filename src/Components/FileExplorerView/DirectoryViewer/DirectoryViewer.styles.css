@@ -1,0 +1,50 @@
+.folder-contents-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.header-row, .item-row {
+    display: flex;
+    height: 32px;
+    gap: 8px;
+    align-items: center;
+
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--grey3);
+}
+
+.header-row {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.item-row:hover {
+    background-color: var(--grey2);
+    cursor: pointer;
+}
+
+.icon-column {
+    display: flex;
+    padding-left: 8px;
+    width: 40px;
+}
+
+.name-column {
+    flex-grow: 1;
+}
+
+.modified-column {
+    width: 150px;
+}
+
+.size-column {
+    width: 100px;
+}
+
+.empty-folder-message {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--grey7);
+    margin: auto;
+}

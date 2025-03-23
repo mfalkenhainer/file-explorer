@@ -1,0 +1,28 @@
+/* Credit https://coolors.co/palette/f8f9fa-e9ecef-dee2e6-ced4da-adb5bd-6c757d-495057-343a40-212529 */
+:root {
+    --grey1: #F8F9FA;
+    --grey2: #E9ECEF;
+    --grey3: #DEE2E6;
+    --grey4: #CED4DA;
+    --grey5: #ADB5BD;
+    --grey6: #6C757D;
+    --grey7: #495057;
+    --grey8: #343A40;
+    --grey9: #212529;
+}
+
+* {
+    font-family: sans-serif;
+    color: var(--grey9);
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+}
+
+#app {
+    height: 100%;
+
+    background-color: var(--grey1);
+}

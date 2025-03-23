@@ -1,0 +1,19 @@
+.page-container {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.nav-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+    width: 200px;
+    border-right: 1px solid var(--grey3);
+}
+
+.main-container {
+    display: flex;
+    flex-grow: 1;
+}

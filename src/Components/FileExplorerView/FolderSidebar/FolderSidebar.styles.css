@@ -1,0 +1,42 @@
+.folders-sidebar-container {
+    padding: 4px;
+}
+
+.folder-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    gap: 4px;
+}
+
+.folder-row button {
+    padding: 0 4px;
+    border: 1px solid var(--grey1);
+    border-radius: 8px;
+    background-color: inherit;
+}
+
+.folder-row button:hover {
+    border: 1px solid var(--grey3);
+    background-color: var(--grey2);
+    cursor: pointer;
+}
+
+.expand-button, .expand-button-placeholder {
+    height: 32px;
+    width: 32px;
+}
+
+.select-button {
+    display: flex;
+    flex-grow: 1;
+    height: 32px;
+
+    align-items: center;
+    gap: 8px;
+}
+
+.folder-row.selected .select-button {
+    background-color: var(--grey2);
+}
