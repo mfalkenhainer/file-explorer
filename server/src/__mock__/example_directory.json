@@ -1,0 +1,48 @@
+{
+  "type": "folder",
+  "name": "Files",
+  "modified": "2025-03-23T17:39:47+0000",
+  "size": 10,
+  "children": [
+    {
+      "type": "folder",
+      "name": "Documents",
+      "modified": "2025-03-23T17:39:47+0000",
+      "size": 10,
+      "children": [
+        {
+          "type": "file",
+          "name": "Example.txt",
+          "modified": "2025-03-23T17:39:47+0000",
+          "size": 10
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Images",
+      "modified": "2025-03-23T17:39:47+0000",
+      "size": 10,
+      "children": []
+    },
+    {
+      "type": "folder",
+      "name": "System",
+      "modified": "2025-03-23T17:39:47+0000",
+      "size": 10,
+      "children": []
+    },
+    {
+      "type": "file",
+      "name": "Description.rtf",
+      "modified": "2025-03-23T17:39:47+0000",
+      "size": 2048
+    },
+    {
+      "type": "file",
+      "name": "Description.txt",
+      "modified": "2025-03-23T17:39:47+0000",
+      "size": 1024
+    }
+  ]
+}
