@@ -25,6 +25,12 @@ Make sure line 10 in `client/src/main.ts` is set to `true`
 4. `npm run dev`
 5. Navigate to localhost:5173
 
+### Frontend Tests
+1. `nvm use`
+2. `cd client`
+3. `npm install`
+4. `npm run test`
+
 
 # Known remaining bugs
 - Expanding a folder before selecting it shows nothing in the sidebar because the API state is not yet connected to the expand functionality.
@@ -38,3 +44,4 @@ Make sure line 10 in `client/src/main.ts` is set to `true`
 - File contents viewing
 - Adjustable and sortable table columns
 - WCAG compliance
+- Add more unit tests

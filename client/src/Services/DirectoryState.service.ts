@@ -2,20 +2,20 @@ import { TreeNode } from '../Models/TreeNode.model.ts';
 import { DirectoryApiService } from './DirectoryApi.service.ts';
 
 export class DirectoryStateService {
-  directoryApiService: DirectoryApiService;
   directoryRoot: TreeNode;
   selectedFolder: TreeNode;
+  directoryApiService?: DirectoryApiService;
   itemByName: Record<string, TreeNode> = {};
   itemPathByName: Record<string, string> = {};
   onSelectedFolderChangeCallbacks: Function[] = [];
 
   constructor(
-    _directoryApiService: DirectoryApiService,
     _directoryRoot: TreeNode,
+    _directoryApiService?: DirectoryApiService,
   ) {
-    this.directoryApiService = _directoryApiService;
     this.directoryRoot = _directoryRoot;
     this.selectedFolder = _directoryRoot;
+    this.directoryApiService = _directoryApiService;
 
     this.addItemToNameMap(_directoryRoot);
     this.addItemPathToNameMap(_directoryRoot);
@@ -30,7 +30,7 @@ export class DirectoryStateService {
   }
 
   async setSelectedFolder(_selectedFolder: TreeNode) {
-    if (!_selectedFolder.children) {
+    if (!_selectedFolder.children && this.directoryApiService) {
       const childItems = await this.directoryApiService.retrieveSubDirectory(
         this.itemPathByName[_selectedFolder.name],
       );
