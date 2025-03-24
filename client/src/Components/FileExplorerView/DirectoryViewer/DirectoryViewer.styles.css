@@ -2,11 +2,12 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    overflow-y: auto;
 }
 
 .header-row, .item-row {
     display: flex;
-    height: 32px;
+    height: 24px;
     gap: 8px;
     align-items: center;
 

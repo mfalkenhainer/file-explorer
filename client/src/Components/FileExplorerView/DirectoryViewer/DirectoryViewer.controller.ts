@@ -36,9 +36,16 @@ const directoryViewerView = (selectedFolder: TreeNode) => `
     ${
       selectedFolder?.children && selectedFolder.children.length > 0
         ? selectedFolder.children
+            .sort((childA, childB) =>
+              childA.type > childB.type
+                ? -1
+                : childA.name > childB.name
+                  ? 1
+                  : -1,
+            )
             .map(
               (childItem): string => `
-                <div class="item-row" id="${childItem.name}">
+                <div class="item-row" id="${childItem.name}" tabindex="0">
                   <span class="icon-column">
                     ${
                       childItem.type === 'folder'

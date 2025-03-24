@@ -9,7 +9,7 @@ interface FolderSidebarState {
   folder: TreeNode;
   isExpanded: boolean;
   level: number;
-  childFolderStates: FolderSidebarState[];
+  childFolderStates?: FolderSidebarState[];
 }
 
 const folderView = (
@@ -17,21 +17,21 @@ const folderView = (
   selectedFolder: TreeNode,
 ): string => `
   <div class="folder-row ${folderState.folder.name === selectedFolder.name ? 'selected' : ''}">
-    ${
-      folderState.childFolderStates.length > 0
-        ? `<button id="${folderState.folder.name}" class="expand-button">
+    ${[...Array(folderState.level)].map(() => '<div class="level-buffer"></div>').join('')}
+    ${`<button id="${folderState.folder.name}" class="expand-button">
               <span class="material-icons">${folderState.isExpanded ? 'arrow_drop_down' : 'arrow_right'}</span>
-           </button>`
-        : '<div class="expand-button-placeholder"></div>'
-    }
+         </button>`}
     <button id="${folderState.folder.name}" class="select-button">
         <span class="material-icons">folder</span>
         ${folderState.folder.name}
     </button>
   </div>
   ${
-    folderState.isExpanded
+    folderState.isExpanded && folderState.childFolderStates
       ? folderState.childFolderStates
+          .sort((_folderStateA, _folderStateB) =>
+            _folderStateA.folder.name > _folderStateB.folder.name ? 1 : -1,
+          )
           .map((childFolderState) =>
             folderView(childFolderState, selectedFolder),
           )
@@ -52,7 +52,7 @@ const folderSidebarView = (
 export class FolderSidebarController extends BaseComponentController {
   selectedFolder: TreeNode;
   folderState: FolderSidebarState;
-  folderStateById: Record<string, FolderSidebarState> = {};
+  folderStateByName: Record<string, FolderSidebarState> = {};
 
   constructor(
     rootElement: JQuery,
@@ -61,9 +61,10 @@ export class FolderSidebarController extends BaseComponentController {
     super(rootElement, directoryStateService);
 
     this.selectedFolder = this.directoryStateService.getSelectedFolder();
-    this.folderState = this.convertTreeNodeToFolderSidebarStateAndAddToIdMap(
-      directoryStateService.getDirectoryRoot(),
-    );
+    this.folderState =
+      this.convertTreeNodeToFolderSidebarStateAndAddToIdMapRecursively(
+        directoryStateService.getDirectoryRoot(),
+      );
   }
 
   renderView() {
@@ -87,8 +88,8 @@ export class FolderSidebarController extends BaseComponentController {
   private handleExpandClick(event: ClickEvent) {
     const clickedButtonId = event.currentTarget.id;
 
-    this.folderStateById[clickedButtonId].isExpanded =
-      !this.folderStateById[clickedButtonId].isExpanded;
+    this.folderStateByName[clickedButtonId].isExpanded =
+      !this.folderStateByName[clickedButtonId].isExpanded;
 
     this.renderView();
   }
@@ -97,36 +98,55 @@ export class FolderSidebarController extends BaseComponentController {
     const clickedButtonId = event.currentTarget.id;
 
     this.directoryStateService.setSelectedFolder(
-      this.folderStateById[clickedButtonId].folder,
+      this.folderStateByName[clickedButtonId].folder,
     );
   }
 
   private handleSelectedFolderChange(_selectedFolder: TreeNode) {
-    this.folderStateById[this.selectedFolder.name].isExpanded = true;
+    const selectedFolderState = this.folderStateByName[_selectedFolder.name];
+
+    if (!selectedFolderState.childFolderStates) {
+      selectedFolderState.childFolderStates = _selectedFolder.children?.reduce(
+        (childStates, childItem) => {
+          if (childItem.type === 'folder') {
+            childStates.push(
+              this.convertTreeNodeToFolderSidebarStateAndAddToIdMapRecursively(
+                childItem,
+                selectedFolderState.level + 1,
+              ),
+            );
+          }
+          return childStates;
+        },
+        [] as FolderSidebarState[],
+      );
+    }
+
     this.selectedFolder = _selectedFolder;
+    selectedFolderState.isExpanded = true;
 
     this.renderView();
   }
 
-  private convertTreeNodeToFolderSidebarStateAndAddToIdMap(
+  private convertTreeNodeToFolderSidebarStateAndAddToIdMapRecursively(
     folder: TreeNode,
     level: number = 0,
   ): FolderSidebarState {
     const folderState: FolderSidebarState = {
       folder,
-      isExpanded: false,
+      isExpanded: level === 0,
       level,
       childFolderStates: this.directoryStateService
         .getChildFolders(folder)
-        .map((childFolder) =>
-          this.convertTreeNodeToFolderSidebarStateAndAddToIdMap(
+        ?.map((childFolder) =>
+          this.convertTreeNodeToFolderSidebarStateAndAddToIdMapRecursively(
             childFolder,
             level + 1,
           ),
         ),
     };
 
-    this.folderStateById[folderState.folder.name] = folderState;
+    this.folderStateByName[folderState.folder.name] = folderState;
 
     return folderState;
   }

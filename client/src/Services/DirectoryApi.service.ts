@@ -8,8 +8,16 @@ export class DirectoryApiService {
   }
 
   async retrieveRootDirectory() {
-    const response = await fetch(`${this.baseUrl}/`);
+    const response = await fetch(`${this.baseUrl}/root`);
 
     return (await response.json()) as TreeNode;
+  }
+
+  async retrieveSubDirectory(path: string) {
+    const response = await fetch(
+      `${this.baseUrl}/child/${path.replaceAll('/', '_')}`,
+    );
+
+    return (await response.json()) as TreeNode[];
   }
 }

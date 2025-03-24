@@ -1,5 +1,6 @@
 .folders-sidebar-container {
     padding: 4px;
+    overflow-y: auto;
 }
 
 .folder-row {
@@ -8,6 +9,11 @@
     width: 100%;
 
     gap: 4px;
+}
+
+.level-buffer {
+    height: 32px;
+    width: 8px;
 }
 
 .folder-row button {
