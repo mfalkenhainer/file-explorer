@@ -17,8 +17,8 @@ const rootDirectory = useLiveData
   : (exampleDirectory as unknown as TreeNode);
 
 const directoryLookupService = new DirectoryStateService(
-  directoryApiService,
   rootDirectory,
+  directoryApiService,
 );
 
 new FileExplorerController(appRoot, directoryLookupService).renderView();
