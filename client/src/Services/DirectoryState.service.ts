@@ -7,6 +7,7 @@ export class DirectoryStateService {
   directoryApiService?: DirectoryApiService;
   itemByName: Record<string, TreeNode> = {};
   itemPathByName: Record<string, string> = {};
+  onItemAdditionsCallbacks: Function[] = [];
   onSelectedFolderChangeCallbacks: Function[] = [];
 
   constructor(
@@ -30,19 +31,8 @@ export class DirectoryStateService {
   }
 
   async setSelectedFolder(_selectedFolder: TreeNode) {
-    if (!_selectedFolder.children && this.directoryApiService) {
-      const childItems = await this.directoryApiService.retrieveSubDirectory(
-        this.itemPathByName[_selectedFolder.name],
-      );
-      childItems.forEach((childItem) => {
-        this.addItemToNameMap(childItem);
-        this.addItemPathToNameMap(
-          childItem,
-          this.itemPathByName[_selectedFolder.name],
-        );
-      });
-
-      _selectedFolder.children = childItems;
+    if (!_selectedFolder.children) {
+      await this.retrieveChildItemsFromApi(_selectedFolder);
     }
 
     this.selectedFolder = _selectedFolder;
@@ -50,6 +40,30 @@ export class DirectoryStateService {
     this.onSelectedFolderChangeCallbacks.forEach((callback) =>
       callback(this.selectedFolder),
     );
+  }
+
+  public async retrieveChildItemsFromApi(folder: TreeNode): Promise<void> {
+    if (this.directoryApiService) {
+      const childItems = await this.directoryApiService.retrieveSubDirectory(
+        this.itemPathByName[folder.name],
+      );
+      childItems.forEach((childItem) => {
+        this.addItemToNameMap(childItem);
+        this.addItemPathToNameMap(childItem, this.itemPathByName[folder.name]);
+      });
+
+      folder.children = childItems;
+
+      this.onItemAdditionsCallbacks.forEach((callback) =>
+        callback(folder, childItems),
+      );
+    }
+  }
+
+  addOnItemAdditions(
+    callback: (parentFolder: TreeNode, newItems: TreeNode[]) => void,
+  ) {
+    this.onItemAdditionsCallbacks.push(callback);
   }
 
   addOnSelectedFolderChange(callback: (_selectedFolder: TreeNode) => void) {
